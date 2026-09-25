@@ -49,6 +49,26 @@ class ConnectionManager:
         # colas de distribución para clientes SSE (vista de audiencia)
         self.sse_queues: Dict[str, Set[asyncio.Queue]] = {}
 
+        # Buffer de audio en memoria RAM por sala (preserva el audio íntegro de la sesión)
+        self.room_audio_buffers: Dict[str, bytearray] = {}
+
+    def append_audio(self, room_id: str, chunk: bytes) -> None:
+        """Guarda fragmentos de audio en memoria para preservar el flujo acústico íntegro."""
+        clean = room_id.strip().lower()
+        if clean not in self.room_audio_buffers:
+            self.room_audio_buffers[clean] = bytearray()
+        self.room_audio_buffers[clean].extend(chunk)
+
+    def get_audio_buffer(self, room_id: str) -> bytes:
+        """Obtiene el buffer de audio acumulado en memoria de la sala."""
+        clean = room_id.strip().lower()
+        return bytes(self.room_audio_buffers.get(clean, b""))
+
+    def clear_audio_buffer(self, room_id: str) -> None:
+        """Limpia el buffer de audio en memoria de la sala."""
+        clean = room_id.strip().lower()
+        self.room_audio_buffers.pop(clean, None)
+
     def get_room_language(self, room_id: str) -> str:
         return self.room_languages.get(room_id.strip().lower(), "auto")
 

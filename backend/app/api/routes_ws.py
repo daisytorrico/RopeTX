@@ -37,11 +37,12 @@ async def ws_stream(
         while True:
             data = await websocket.receive_bytes()
             manager.record_audio_packet(room_id)
+            manager.append_audio(room_id, data)
 
-            # POLÍTICA DE BAJA LATENCIA (CERO DELAY ACUMULADO):
-            # Si la cola se llena o acumula más de 8 fragmentos (>800ms de retraso),
-            # descartamos los paquetes viejos y mantenemos solo el audio más reciente.
-            while queue.qsize() > 6:
+            # Control de backpressure para baja latencia:
+            # Si se acumula congestión severa (>20 fragmentos / >2 seg de delay acumulado),
+            # descartamos los más antiguos para reenganchar al orador en tiempo real.
+            while queue.qsize() > 20:
                 try:
                     queue.get_nowait()
                 except Exception:
