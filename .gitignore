@@ -8,6 +8,7 @@ backend/.env
 frontend/.env
 !.env.example
 !backend/.env.example
+!frontend/.env.production
 
 # ==============================================================================
 # Databases & Persistence (Local dev DBs & SQLite files)
