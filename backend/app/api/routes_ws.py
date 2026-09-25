@@ -38,6 +38,15 @@ async def ws_stream(
             data = await websocket.receive_bytes()
             manager.record_audio_packet(room_id)
 
+            # POLÍTICA DE BAJA LATENCIA (CERO DELAY ACUMULADO):
+            # Si la cola se llena o acumula más de 8 fragmentos (>800ms de retraso),
+            # descartamos los paquetes viejos y mantenemos solo el audio más reciente.
+            while queue.qsize() > 6:
+                try:
+                    queue.get_nowait()
+                except Exception:
+                    break
+
             try:
                 queue.put_nowait(data)
             except asyncio.QueueFull:

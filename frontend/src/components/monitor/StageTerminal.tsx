@@ -60,6 +60,7 @@ export const StageTerminal: React.FC<StageTerminalProps> = ({
   previewScrollRef,
 }) => {
   const [fontSizeLevel, setFontSizeLevel] = useState<'normal' | 'large' | 'xl'>('large');
+  const [subViewMode, setSubViewMode] = useState<'dual' | 'original' | 'es' | 'other'>('dual');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
@@ -408,10 +409,54 @@ export const StageTerminal: React.FC<StageTerminalProps> = ({
                   <div className="px-4 md:px-5 py-2.5 bg-zinc-950/90 border-b border-zinc-800/80 flex items-center justify-between text-[11px] font-mono text-zinc-400 select-none shrink-0">
                     <div className="flex items-center gap-2.5">
                       <span className={`w-2 h-2 rounded-full ${isSelectedLive ? 'bg-amber-500 animate-pulse' : 'bg-zinc-700'}`} />
-                      <span className="tracking-wider uppercase font-bold text-zinc-300">LIVE TRANSCRIPTION REVIEW</span>
+                      <span className="tracking-wider uppercase font-bold text-zinc-300 hidden sm:inline">LIVE TRANSCRIPTION REVIEW</span>
+                      
+                      {/* Selector de 4 modos de vista para el Administrador */}
+                      <div className="inline-flex p-0.5 bg-zinc-900 border border-zinc-800 rounded-xs text-[10px]">
+                        <button
+                          type="button"
+                          onClick={() => setSubViewMode('dual')}
+                          className={`px-1.5 py-0.5 rounded-xs transition-colors cursor-pointer font-bold ${
+                            subViewMode === 'dual' ? 'bg-zinc-800 text-amber-400' : 'text-zinc-400 hover:text-zinc-200'
+                          }`}
+                          title="Vista Bilingüe completa (Original + Traducción)"
+                        >
+                          Dual
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setSubViewMode('original')}
+                          className={`px-1.5 py-0.5 rounded-xs transition-colors cursor-pointer font-bold ${
+                            subViewMode === 'original' ? 'bg-zinc-800 text-amber-400' : 'text-zinc-400 hover:text-zinc-200'
+                          }`}
+                          title="Solo texto original del orador (sin saltos)"
+                        >
+                          Original
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setSubViewMode('es')}
+                          className={`px-1.5 py-0.5 rounded-xs transition-colors cursor-pointer font-bold ${
+                            subViewMode === 'es' ? 'bg-zinc-800 text-amber-400' : 'text-zinc-400 hover:text-zinc-200'
+                          }`}
+                          title="Solo traducción a Español (sin saltos)"
+                        >
+                          ES
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setSubViewMode('other')}
+                          className={`px-1.5 py-0.5 rounded-xs transition-colors cursor-pointer font-bold ${
+                            subViewMode === 'other' ? 'bg-zinc-800 text-amber-400' : 'text-zinc-400 hover:text-zinc-200'
+                          }`}
+                          title="Solo traducción EN / PT (sin saltos)"
+                        >
+                          EN/PT
+                        </button>
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-2">
                       <span className="text-zinc-500 tabular-nums font-mono text-[10px]">LINES: {subtitles.length}</span>
 
                       {/* Limpiar canvas de revisión */}
@@ -473,6 +518,20 @@ export const StageTerminal: React.FC<StageTerminalProps> = ({
                           const isLast = index === subtitles.length - 1;
                           const isInterim = !sub.is_final;
                           const speakerCode = (sub.speaker_lang || speakerLang || 'es').toUpperCase();
+                          const origText = (sub.transcription || sub.original || sub.text || '').trim();
+                          const esTranslation = sub.translations?.['es'] || (sub.speaker_lang === 'es' ? origText : '');
+                          const otherTranslation = sub.translations?.['en'] || sub.translations?.['pt'] || '';
+
+                          let mainDisplayText = origText;
+                          let displayBadge = speakerCode;
+
+                          if (subViewMode === 'es') {
+                            mainDisplayText = esTranslation || origText;
+                            displayBadge = 'ES';
+                          } else if (subViewMode === 'other') {
+                            mainDisplayText = otherTranslation || origText;
+                            displayBadge = sub.translations?.['en'] ? 'EN' : (sub.translations?.['pt'] ? 'PT' : speakerCode);
+                          }
 
                           return (
                             <div
@@ -485,28 +544,28 @@ export const StageTerminal: React.FC<StageTerminalProps> = ({
                               {/* Metadatos superiores de la línea: Código de Idioma y Marca Temporal */}
                               <div className="flex items-center justify-between text-[10px] select-none text-zinc-500">
                                 <span className="px-1.5 py-0.2 bg-zinc-900 border border-zinc-800 rounded-xs font-bold text-zinc-400">
-                                  {speakerCode}
+                                  {displayBadge}
                                 </span>
                                 <span>
                                   {new Date(sub.timestamp * 1000).toISOString().substr(11, 8)}
                                 </span>
                               </div>
 
-                              {/* Texto transcripto en el idioma original */}
+                              {/* Texto principal renderizado */}
                               <p
                                 className={`${fontClass} tracking-normal ${isInterim && isLast
                                   ? 'text-zinc-100 font-medium'
                                   : 'text-zinc-300 font-normal'
                                   }`}
                               >
-                                {sub.transcription || sub.original || sub.text}
+                                {mainDisplayText}
                                 {isInterim && isLast && (
                                   <span className="inline-block w-1.5 h-[0.85em] bg-amber-400/80 ml-1.5 align-baseline animate-pulse rounded-xs" />
                                 )}
                               </p>
 
-                              {/* Pistas traducidas con etiquetas sobrias y claras */}
-                              {sub.translations && Object.keys(sub.translations).length > 0 && (
+                              {/* Pistas traducidas solo si estamos en modo Dual */}
+                              {subViewMode === 'dual' && sub.translations && Object.keys(sub.translations).length > 0 && (
                                 <div className="space-y-1 pt-0.5">
                                   {Object.entries(sub.translations).map(([lang, transText]) => {
                                     if (!transText || lang.toLowerCase() === (sub.speaker_lang || 'es').toLowerCase()) {
