@@ -20,12 +20,12 @@ logger = logging.getLogger("gemini_asr")
 
 async def _drain_queue(audio_queue: asyncio.Queue) -> None:
     """Consume la cola para evitar saturación de memoria si el ASR está desconectado."""
-    while not audio_queue.empty():
-        try:
-            audio_queue.get_nowait()
+    try:
+        while True:
+            await audio_queue.get()
             audio_queue.task_done()
-        except (asyncio.QueueEmpty, ValueError):
-            break
+    except asyncio.CancelledError:
+        pass
 
 
 async def _send_audio_loop(session, audio_queue: asyncio.Queue):
@@ -64,7 +64,6 @@ async def _receive_subtitles_loop(
         if not response.server_content:
             continue
 
-        clean_source = (source_lang or "es").lower().strip()
         current_room_lang = manager.get_room_language(room_id)
         effective_source = current_room_lang if current_room_lang in {"es", "en", "pt"} else (clean_source if clean_source in {"es", "en", "pt"} else "es")
 

@@ -196,3 +196,25 @@ class AudioStreamFactory:
         """Inicia el streaming asíncrono desde una URL remota de audio/video usando FFmpeg."""
         await stream_url_buffer(room_id, stream_url, source_lang=source_lang)
 
+        if room_id in simulation_tasks:
+            del simulation_tasks[room_id]
+
+
+class AudioStreamFactory:
+    """Fábrica (Factory Pattern) para la instanciación limpia de fuentes de audio."""
+
+    @staticmethod
+    def ensure_stream(room_id: str, source_lang: str = "auto") -> asyncio.Queue:
+        """Obtiene o inicia la cola unificada para micrófono en vivo o ingesta externa."""
+        return ensure_room_stream(room_id, source_lang=source_lang)
+
+    @staticmethod
+    async def stream_wav(room_id: str, wav_bytes: bytes, source_lang: str = "auto") -> None:
+        """Inicia el streaming asíncrono desde un buffer de audio formateado."""
+        await stream_wav_buffer(room_id, wav_bytes, source_lang=source_lang)
+
+    @staticmethod
+    async def stream_url(room_id: str, stream_url: str, source_lang: str = "auto") -> None:
+        """Inicia el streaming asíncrono desde una URL remota de audio/video usando FFmpeg."""
+        await stream_url_buffer(room_id, stream_url, source_lang=source_lang)
+

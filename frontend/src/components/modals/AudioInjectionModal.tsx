@@ -77,7 +77,7 @@ export const AudioInjectionModal: React.FC<AudioInjectionModalProps> = ({
             }
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     }
   }, [isOpen]);
 
@@ -207,7 +207,7 @@ export const AudioInjectionModal: React.FC<AudioInjectionModalProps> = ({
             `${BACKEND_URL}/api/stop-stream/${encodeURIComponent(targetRoom)}`,
             { method: 'POST' }
           );
-        } catch {}
+        } catch { }
       }
       await onStreamStarted();
       onClose();
@@ -247,7 +247,7 @@ export const AudioInjectionModal: React.FC<AudioInjectionModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 font-sans animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md font-sans animate-in fade-in duration-150">
       <div className="w-full max-w-xl bg-[#09090d] border border-zinc-800/90 rounded-lg p-5 sm:p-6 space-y-5 shadow-2xl shadow-black/90">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-zinc-800/80 pb-3.5">
@@ -304,16 +304,15 @@ export const AudioInjectionModal: React.FC<AudioInjectionModalProps> = ({
           </div>
         </div>
 
-        {/* Row 2: Source Type Segmented Control (FILE | MIC | URL) — DEMO tiene su botón dedicado abajo */}
-        <div className="grid grid-cols-3 gap-1.5 p-1 bg-zinc-950 border border-zinc-800/80 rounded-xs font-mono select-none">
+        {/* Row 2: Source Type Segmented Control (FILE | DEMO | MIC | URL) */}
+        <div className="grid grid-cols-4 gap-1.5 p-1 bg-zinc-950 border border-zinc-800/80 rounded-xs font-mono select-none">
           <button
             type="button"
             onClick={() => setSourceType('file')}
-            className={`py-2 px-2 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 rounded-xs ${
-              sourceType === 'file'
+            className={`py-2 px-2 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 rounded-xs ${sourceType === 'file'
                 ? 'bg-zinc-800/90 text-amber-400 shadow-sm border border-zinc-700/80'
                 : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/50'
-            }`}
+              }`}
           >
             <Upload className="w-3.5 h-3.5" />
             <span>FILE</span>
@@ -321,12 +320,23 @@ export const AudioInjectionModal: React.FC<AudioInjectionModalProps> = ({
 
           <button
             type="button"
-            onClick={() => setSourceType('mic')}
-            className={`py-2 px-2 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 rounded-xs ${
-              sourceType === 'mic'
+            onClick={() => setSourceType('demo')}
+            className={`py-2 px-2 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 rounded-xs ${sourceType === 'demo'
                 ? 'bg-zinc-800/90 text-amber-400 shadow-sm border border-zinc-700/80'
                 : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/50'
-            }`}
+              }`}
+          >
+            <Play className="w-3.5 h-3.5" />
+            <span>DEMO</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setSourceType('mic')}
+            className={`py-2 px-2 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 rounded-xs ${sourceType === 'mic'
+                ? 'bg-zinc-800/90 text-amber-400 shadow-sm border border-zinc-700/80'
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/50'
+              }`}
           >
             <Mic className="w-3.5 h-3.5" />
             <span>MIC</span>
@@ -335,11 +345,10 @@ export const AudioInjectionModal: React.FC<AudioInjectionModalProps> = ({
           <button
             type="button"
             onClick={() => setSourceType('url')}
-            className={`py-2 px-2 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 rounded-xs ${
-              sourceType === 'url'
+            className={`py-2 px-2 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 rounded-xs ${sourceType === 'url'
                 ? 'bg-zinc-800/90 text-amber-400 shadow-sm border border-zinc-700/80'
                 : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/50'
-            }`}
+              }`}
           >
             <Link2 className="w-3.5 h-3.5" />
             <span>URL</span>
@@ -395,13 +404,12 @@ export const AudioInjectionModal: React.FC<AudioInjectionModalProps> = ({
                 if (file) handleFileValidation(file);
               }}
               onClick={() => fileInputRef.current?.click()}
-              className={`w-full h-full border border-dashed rounded-xs text-center cursor-pointer transition-colors flex flex-col items-center justify-center p-3 ${
-                isDragging
+              className={`w-full h-full border border-dashed rounded-xs text-center cursor-pointer transition-colors flex flex-col items-center justify-center p-3 ${isDragging
                   ? 'border-amber-500 bg-amber-500/5'
                   : selectedFile
-                  ? 'border-zinc-700 bg-zinc-900/40'
-                  : 'border-zinc-800 hover:border-zinc-700 bg-zinc-900/20 hover:bg-zinc-900/40'
-              }`}
+                    ? 'border-zinc-700 bg-zinc-900/40'
+                    : 'border-zinc-800 hover:border-zinc-700 bg-zinc-900/20 hover:bg-zinc-900/40'
+                }`}
             >
               <input
                 ref={fileInputRef}
@@ -475,11 +483,10 @@ export const AudioInjectionModal: React.FC<AudioInjectionModalProps> = ({
             <button
               type="button"
               onClick={() => setSourceType('demo')}
-              className={`px-3 py-1.5 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 rounded-xs border ${
-                sourceType === 'demo'
+              className={`px-3 py-1.5 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 rounded-xs border ${sourceType === 'demo'
                   ? 'bg-zinc-800/90 text-amber-400 border-amber-500/50 shadow-sm'
                   : 'bg-zinc-950 border-zinc-800/80 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/50'
-              }`}
+                }`}
               title="Select demo test audio"
             >
               <Play className="w-3.5 h-3.5 text-amber-400" />
@@ -496,92 +503,91 @@ export const AudioInjectionModal: React.FC<AudioInjectionModalProps> = ({
               Cancel
             </button>
 
-          {sourceType === 'demo' && (
-            isRoomLive ? (
-              <button
-                type="button"
-                onClick={handleStopActiveStream}
-                disabled={isStopping}
-                className="px-5 py-2 bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase transition-all cursor-pointer flex items-center gap-1.5 rounded-xs shadow-md shadow-red-950/40"
-              >
-                {isStopping ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Square className="w-3.5 h-3.5 fill-current" />}
-                <span>Stop</span>
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleSimulateDemo}
-                disabled={isStartingDemo}
-                className="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs uppercase transition-all cursor-pointer disabled:opacity-40 flex items-center gap-1.5 rounded-xs shadow-md shadow-amber-500/20"
-              >
-                {isStartingDemo ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5 fill-current" />}
-                <span>Start</span>
-              </button>
-            )
-          )}
+            {sourceType === 'demo' && (
+              isRoomLive ? (
+                <button
+                  type="button"
+                  onClick={handleStopActiveStream}
+                  disabled={isStopping}
+                  className="px-5 py-2 bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase transition-all cursor-pointer flex items-center gap-1.5 rounded-xs shadow-md shadow-red-950/40"
+                >
+                  {isStopping ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Square className="w-3.5 h-3.5 fill-current" />}
+                  <span>Stop</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleSimulateDemo}
+                  disabled={isStartingDemo}
+                  className="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs uppercase transition-all cursor-pointer disabled:opacity-40 flex items-center gap-1.5 rounded-xs shadow-md shadow-amber-500/20"
+                >
+                  {isStartingDemo ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+                  <span>Start</span>
+                </button>
+              )
+            )}
 
-          {sourceType === 'file' && (
-            isRoomLive ? (
-              <button
-                type="button"
-                onClick={handleStopActiveStream}
-                disabled={isStopping}
-                className="px-5 py-2 bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase transition-all cursor-pointer flex items-center gap-1.5 rounded-xs shadow-md shadow-red-950/40"
-              >
-                {isStopping ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Square className="w-3.5 h-3.5 fill-current" />}
-                <span>Stop</span>
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleFileUpload}
-                disabled={!selectedFile || isUploading}
-                className="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs uppercase transition-all cursor-pointer disabled:opacity-40 flex items-center gap-1.5 rounded-xs shadow-md shadow-amber-500/20"
-              >
-                {isUploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
-                <span>Start</span>
-              </button>
-            )
-          )}
+            {sourceType === 'file' && (
+              isRoomLive ? (
+                <button
+                  type="button"
+                  onClick={handleStopActiveStream}
+                  disabled={isStopping}
+                  className="px-5 py-2 bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase transition-all cursor-pointer flex items-center gap-1.5 rounded-xs shadow-md shadow-red-950/40"
+                >
+                  {isStopping ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Square className="w-3.5 h-3.5 fill-current" />}
+                  <span>Stop</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleFileUpload}
+                  disabled={!selectedFile || isUploading}
+                  className="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs uppercase transition-all cursor-pointer disabled:opacity-40 flex items-center gap-1.5 rounded-xs shadow-md shadow-amber-500/20"
+                >
+                  {isUploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
+                  <span>Start</span>
+                </button>
+              )
+            )}
 
-          {sourceType === 'mic' && (
-            <button
-              type="button"
-              onClick={handleToggleMic}
-              className={`px-5 py-2 font-bold text-xs uppercase transition-all cursor-pointer flex items-center gap-1.5 rounded-xs ${
-                isMicStreaming
-                  ? 'bg-red-600 hover:bg-red-500 text-white shadow-md shadow-red-950/40'
-                  : 'bg-amber-500 hover:bg-amber-400 text-black shadow-md shadow-amber-500/20'
-              }`}
-            >
-              {isMicStreaming ? <Square className="w-3.5 h-3.5 fill-current" /> : <Mic className="w-3.5 h-3.5" />}
-              <span>{isMicStreaming ? 'Stop' : 'Start'}</span>
-            </button>
-          )}
+            {sourceType === 'mic' && (
+              <button
+                type="button"
+                onClick={handleToggleMic}
+                className={`px-5 py-2 font-bold text-xs uppercase transition-all cursor-pointer flex items-center gap-1.5 rounded-xs ${isMicStreaming
+                    ? 'bg-red-600 hover:bg-red-500 text-white shadow-md shadow-red-950/40'
+                    : 'bg-amber-500 hover:bg-amber-400 text-black shadow-md shadow-amber-500/20'
+                  }`}
+              >
+                {isMicStreaming ? <Square className="w-3.5 h-3.5 fill-current" /> : <Mic className="w-3.5 h-3.5" />}
+                <span>{isMicStreaming ? 'Stop' : 'Start'}</span>
+              </button>
+            )}
 
-          {sourceType === 'url' && (
-            isRoomLive ? (
-              <button
-                type="button"
-                onClick={handleStopActiveStream}
-                disabled={isStopping}
-                className="px-5 py-2 bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase transition-all cursor-pointer flex items-center gap-1.5 rounded-xs shadow-md shadow-red-950/40"
-              >
-                {isStopping ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Square className="w-3.5 h-3.5 fill-current" />}
-                <span>Stop</span>
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleStartUrlStream}
-                disabled={!streamUrl.trim() || isStartingUrl}
-                className="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs uppercase transition-all cursor-pointer disabled:opacity-40 flex items-center gap-1.5 rounded-xs shadow-md shadow-amber-500/20"
-              >
-                {isStartingUrl ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Link2 className="w-3.5 h-3.5" />}
-                <span>Start</span>
-              </button>
-            )
-          )}
+            {sourceType === 'url' && (
+              isRoomLive ? (
+                <button
+                  type="button"
+                  onClick={handleStopActiveStream}
+                  disabled={isStopping}
+                  className="px-5 py-2 bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase transition-all cursor-pointer flex items-center gap-1.5 rounded-xs shadow-md shadow-red-950/40"
+                >
+                  {isStopping ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Square className="w-3.5 h-3.5 fill-current" />}
+                  <span>Stop</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleStartUrlStream}
+                  disabled={!streamUrl.trim() || isStartingUrl}
+                  className="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs uppercase transition-all cursor-pointer disabled:opacity-40 flex items-center gap-1.5 rounded-xs shadow-md shadow-amber-500/20"
+                >
+                  {isStartingUrl ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Link2 className="w-3.5 h-3.5" />}
+                  <span>Start</span>
+                </button>
+              )
+            )}
           </div>
         </div>
       </div>
