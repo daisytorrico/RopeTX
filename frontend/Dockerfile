@@ -3,8 +3,8 @@ FROM node:22-alpine
 WORKDIR /app
 
 # Variables de entorno inyectadas durante la compilación de Vite
-ARG VITE_BACKEND_URL=http://localhost:8000
-ARG VITE_WS_BACKEND_URL=ws://localhost:8000
+ARG VITE_BACKEND_URL=https://ropetx-backend-450227135111.us-central1.run.app
+ARG VITE_WS_BACKEND_URL=wss://ropetx-backend-450227135111.us-central1.run.app
 ARG VITE_ADMIN_TOKEN=AdminSecret2026
 
 ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
@@ -17,6 +17,6 @@ RUN npm install --no-audit
 COPY . .
 RUN npm run build
 
-EXPOSE 5173
+EXPOSE 5173 8080
 
-CMD ["npm", "run", "start"]
+CMD ["sh", "-c", "npx vite preview --host 0.0.0.0 --port ${PORT:-5173}"]
