@@ -1,151 +1,113 @@
-# RopeTX Enterprise — Real-Time Subtitling & Translation
+# RopeTX — Real-Time Subtitling & Translation
 
-> **Vibeathon Nerdearla 2026 Challenge:** Construir una solución open source de transcripción y traducción simultánea a escala para conferencias con más de 30 sesiones en paralelo, con baja latencia, glosario técnico y acceso para audiencia mediante QR y overlays OBS.
+Solución open-source para transcripción y traducción en tiempo real de conferencias, eventos y transmisiones en vivo con múltiples salas en paralelo.
 
-**RopeTX** es una solución open-source de nivel empresarial para transcripción y traducción simultánea en tiempo real de conferencias, eventos presenciales y transmisiones en vivo de alta concurrencia.
-
-Potenciada por la **API Live de Gemini (`gemini-2.5-flash` / `gemini-2.0-flash`)** para ASR nativo con glosario técnico (`customVocabulary`), **Gemini Flash-Lite** para traducción simultánea concurrente en streaming con contexto deslizante, y un backend asincrónico en **FastAPI (Python 3.11+)** con frontend reactivo en **React 19 + TypeScript + Vite**.
+Desarrollada para el desafío **Vibeathon Nerdearla 2026**, integrando la **API Live de Gemini** para reconocimiento de voz (ASR) con glosarios técnicos, traducción simultánea en streaming, backend en **FastAPI (Python)** y frontend en **React + TypeScript**.
 
 ---
 
-## Semántica de Idiomas y Pipeline de Traducción
+## Características Principales
 
-El sistema opera bajo un modelo dinámico y determinista por sesión de sala:
-- **Idioma del Orador (`speaker_lang`)**: Selección explícita por charla o sala (`es`, `en`, `pt`). Elimina la detección automática ambigua y garantiza ASR optimizado para la variante del hablante (`es-419`, `en-US`, `pt-BR`).
-- **Idiomas de Audiencia Soportados (`es`, `en`, `pt`)**: Cada espectador puede elegir libremente el idioma en el que desea recibir los subtítulos desde la WebApp o el reproductor.
-- **Traducción Concurrente No Bloqueante (0ms Lag Peribido)**: El backend emite la transcripción confirmada al instante en el idioma del orador y dispara tareas asíncronas (`asyncio.create_task`) para traducir en paralelo a los idiomas destino restantes con contexto previo (*Sliding Window*).
-- **Glosario Término en 2 Niveles**:
-  - **Glosario Base Persistente (`backend/app/data/glossary.json`)**: Versionado en Git por categorías (`cloud_devops`, `databases_streaming`, `languages_frameworks`, `ai_machine_learning`, `architecture_networking`, `development_git_ops`).
-  - **Glosario Dinámico de la Charla (Admin UI)**: Los operadores u oradores pueden agregar términos específicos desde la consola de monitoreo (`StageTerminal`), integrándolos en vivo al vocabulario de Gemini.
+- **Multi-sala:** Soporte para más de 30 salas simultáneas con estado independiente.
+- **Idiomas:** Transcripción y traducción entre Español (`es`), Inglés (`en`) y Portugués (`pt`).
+- **Glosario Técnico:** Glosario base configurable y adición de términos en vivo desde el panel de control.
+- **Acceso para Audiencia:** Interfaz web móvil con selector de idioma accesible mediante código QR.
+- **Integración Broadcast:** Overlays transparentes listos para OBS Studio y vMix.
+- **Exportación SRT:** Generación automática de archivos `.srt` al finalizar cada sesión.
+
+---
+
+## Enlaces y Acceso
+
+- **Frontend (Audiencia):** `https://ropetx-9bcde.web.app` (Local: `http://localhost:5173`)
+- **Panel de Control / Monitoreo:** `https://ropetx-9bcde.web.app/monitor` (Local: `http://localhost:5173/monitor`)
+- **Overlay para OBS / vMix:** `https://ropetx-9bcde.web.app/overlay?room=main-stage`
+- **Documentación API:** `https://ropetx-backend-450227135111.us-central1.run.app/docs` (Local: `http://localhost:8000/docs`)
+
+### Inicio de Sesión en el Panel (`/monitor`)
+
+Para acceder al panel de administración y control de salas:
+- **URL:** `https://ropetx-9bcde.web.app/monitor`
+- **Clave de acceso (Access Key):** `AdminSecret2026`
 
 ---
 
 ## Requisitos Previos
 
-1. **API Key(s) de Gemini:** [Google AI Studio](https://aistudio.google.com/app/apikey).
-   * **Multi-Key Pool (Opcional):** Podés poner varias claves separadas por coma para sumar cuota (`15 RPM` por proyecto gratis):
-     ```env
-     GEMINI_API_KEYS=AIzaSyClave1...,AIzaSyClave2...
-     ```
-     *(Tip: Para cuotas independientes gratis con la misma cuenta de Google, creá cada clave en un **proyecto nuevo**).*
-2. **Python 3.11+ y Node.js 18+** para desarrollo local.
-3. **Redis (Opcional)**: Si no está disponible, el backend opera en **memoria RAM** automáticamente.
+1. **API Key de Gemini:** [Google AI Studio](https://aistudio.google.com/app/apikey).
+2. **Python 3.11+** y **Node.js 18+** (para desarrollo local).
+3. **FFmpeg** (para ingesta de audio/streams).
 
 ---
 
-## Despliegue Rápido (Quickstart)
+## Instalación y Ejecución Local
 
-### Opción 1: Ejecución con Scripts de Inicio (Windows / PowerShell)
-
-En la raíz del proyecto podés ejecutar el script de inicio rápido:
+### Opción 1: Scripts de Inicio Rápido (Windows)
 
 ```powershell
 # En PowerShell
 .\start.ps1
 
-# O en CMD de Windows
+# O en CMD
 start.bat
 ```
 
-### Opción 3: Despliegue en Google Cloud Run (Producción)
-
-Despliegue directo del contenedor backend en Google Cloud Run con soporte nativo de WebSockets y HTTPS automático:
-
-```bash
-# 1. Login en Google Cloud
-gcloud auth login
-gcloud config set project TU_PROYECTO_ID
-
-# 2. Desplegar backend en Cloud Run
-gcloud run deploy ropetx-backend \
-  --source ./backend \
-  --region us-central1 \
-  --allow-unauthenticated \
-  --set-env-vars "ADMIN_TOKEN=AdminSecret2026,GEMINI_API_KEY=tu_api_key"
-
-# 3. Desplegar frontend en Firebase Hosting (o Vercel)
-cd frontend
-npm run build
-npx firebase deploy --only hosting
-```
+### Opción 2: Ejecución Manual
 
 #### 1. Backend (FastAPI)
 ```bash
 cd backend
 python -m pip install -r requirements.txt
 # Configurar GEMINI_API_KEY en backend/.env o variables de entorno
-python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000 --ws-ping-interval 20 --ws-ping-timeout 20
+python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-#### 2. Frontend (React 19 + TypeScript + Vite)
+#### 2. Frontend (React + Vite)
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-* **Frontend (Audiencia):** `https://ropetx-9bcde.web.app` (Local: `http://localhost:5173`)
-* **Consola de Operador & Ingesta:** `https://ropetx-9bcde.web.app/monitor` (Local: `http://localhost:5173/monitor`)
-* **Overlay Transparente OBS / vMix:** `https://ropetx-9bcde.web.app/overlay?room=main-stage`
-* **Backend API Docs:** `https://ropetx-backend-450227135111.us-central1.run.app/docs` (Local: `http://localhost:8000/docs`)
-
 ---
 
-## 🔐 Acceso a la Consola de Operador y Monitoreo (`/monitor`)
+## Integración con vMix y OBS Studio
 
-Para acceder al panel de administración, gestión de escenarios, glosarios y control de transmisión:
+Los subtítulos se integran mediante fuentes de navegador (*Browser Source*):
 
-- **Enlace directo:** `https://ropetx-9bcde.web.app/monitor` (o `http://localhost:5173/monitor`)
-- **Clave de Acceso (Access Key):** `AdminSecret2026`
+### Configuración en vMix:
+1. En el panel de control (`/monitor`), abrí la pestaña **OBS y vMix**, seleccioná la sala y copiá el enlace del overlay.
+2. En vMix, hacé clic en **Add Input** ➔ **Web Browser**.
+3. Pegá la URL del overlay y configurá la resolución en `1920x1080`.
+4. Usá el botón **Cut** para enviar la entrada a la salida principal (**Program**).
+5. Activá **Fullscreen** hacia el segundo monitor para proyectar en sala con fondo transparente.
 
-> **Instrucciones de Inicio de Sesión:** Al ingresar a la URL del monitor desde el navegador, se solicitará la clave de acceso de operador. Introducí `AdminSecret2026` para autenticarte y habilitar todos los permisos de administración (control de 30+ salas, simulación de audio en vivo, teleprompter de 4 modos, edición de glosario y exportación de archivos SRT).
-
----
-
-## Integración con OBS y vMix (Stage Projection & Broadcast)
-
-La integración gráfica se realiza mediante **fuente de navegador** transparente (*Browser Source / Web Browser Input*):
-
-### Flujo de Configuración en vMix (Paso a Paso):
-1. **Generar Enlace:** En la consola de operador (`/monitor`), abrí la pestaña **OBS y vMix**, seleccioná la sala y activá el modo deseado (**Bilingüe / Dual** u original). Hacé clic en **"Copiar Enlace de Overlay"** (`https://ropetx-9bcde.web.app/overlay?room=main-stage&lang=dual`).
-2. **Agregar Entrada en vMix:** En vMix, hacé clic en **Add Input** ➔ **Web Browser**.
-3. **Pegar URL y Resolución:** Pegá la URL del overlay y asegurate de fijar la resolución en **`1920x1080`**.
-4. **Envío a Programa:** Usá el botón **`Cut`** (o transición directa) para enviar la capa de subtítulos a la pantalla principal (**Program Output**).
-5. **Salida Limpia para Auditorio / Proyector:** Activá la función **`Fullscreen`** apuntando hacia tu segundo monitor o tarjeta de video externa para proyectar subtítulos limpios y transparentes en sala.
-
-### Flujo en OBS Studio:
+### Configuración en OBS Studio:
 1. Agregá una fuente de tipo **Navegador (Browser)** en tu escena.
-2. Pegá la URL del overlay, configurá ancho `1920` y alto `1080`.
-3. Activá *"Apagar cuando no sea visible"* para optimizar recursos de GPU.
+2. Pegá la URL del overlay y configurá resolución `1920x1080`.
 
 ---
 
-## Telemetría y Métricas: Justificación y Herramientas
+## Despliegue en Google Cloud
 
-Las métricas mostradas en la consola de operador (`/monitor`) y en el endpoint `/api/status` reflejan el rendimiento real del pipeline de transmisión:
+### Backend (Google Cloud Run)
+```bash
+gcloud run deploy ropetx-backend \
+  --source ./backend \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --set-env-vars "ADMIN_TOKEN=AdminSecret2026,GEMINI_API_KEY=tu_api_key"
+```
 
-| Métrica | ¿Qué mide y cómo se calcula? | Herramientas y Justificación en la Industria |
-| :--- | :--- | :--- |
-| **Latencia E2E (`latency_ms`)** | Tiempo real transcurrido entre la captura/ingesta del paquete de audio y la confirmación final de la frase por ASR (`time.perf_counter()`). | **Monotonic Timestamps + WebSockets/SSE**: Estándar en sistemas de *live-captioning* (SMPTE/SRT) para verificar que el retardo se mantenga por debajo del umbral de percepción humana (<300ms). |
-| **Audiencia en Vivo (`audience_count`)** | Espectadores activos conectados en tiempo real por sala sumando sockets WebSocket y clientes SSE. | **FastAPI `ConnectionManager` + SSE/WS Heartbeats**: Detección determinista de conexiones vivas con *ping-pong* a 20s, evitando conteos fantasma. Compatible con escalado horizontal vía Redis Pub/Sub. |
-| **Ingesta de Audio (`48kHz/16kHz PCM`)** | Tasa de muestreo y estado del buffer de decodificación de audio continuo. | **FFmpeg Subprocess Ingest**: El estándar de facto de la industria broadcast para ingesta y conversión en memoria de streams HLS (.m3u8), RTSP, RTMP, Web Radio o archivos locales. |
-| **Salud del Pool de API Keys** | Rotación *Round-Robin* y conmutación por error ante límites de cuota (HTTP 429). | **Client Pool Failover**: Patrón de resiliencia estándar en producción para distribuir carga entre múltiples proyectos y garantizar disponibilidad continua en eventos de alta demanda. |
-| **Exportación SRT (`.srt`)** | Generación de subtítulos estandarizados con sincronización precisa de inicio y fin. | **Estándar SubRip / WebVTT (W3C)**: Compatible universalmente con reproductores, plataformas de streaming (YouTube, Twitch) y suites de edición/broadcast (OBS, vMix, Premiere). |
-
----
-
-## Guía de Demostración en Vivo (Demo Highlights)
-
-Para realizar una presentación o *pitch* efectivo del sistema, se recomienda mostrar los siguientes 5 puntos:
-
-1. **Latencia 0ms Percibida**: Hablar por micrófono y mostrar cómo la transcripción aparece al instante en el idioma del orador.
-2. **Selector Multilingüe de Audiencia**: Cambiar en tiempo real entre `Español`, `Inglés` y `Portugués` desde el selector de audiencia.
-3. **Glosario Técnico en Vivo**: Agregar una palabra técnica o el nombre de tu proyecto en el modal de **Glosario de la Charla** del monitor y decirla al micrófono para verificar que Gemini la reconoce sin traducirla literalmente.
-4. **Simulación de Charla (1-Clic)**: Hacer clic en **"Iniciar Demo"** en el panel de monitoreo para proyectar subtítulos de prueba sin necesidad de micrófono.
-5. **Exportación Instantánea de SRT**: Finalizar la transmisión, hacer clic en **"Descargar SRT"** y obtener el archivo de subtítulos estandarizado listo para producción.
+### Frontend (Firebase Hosting)
+```bash
+cd frontend
+npm run build
+npx firebase deploy --only hosting
+```
 
 ---
 
 ## Licencia
 
-Este proyecto está liberado bajo la Licencia **MIT** aprobada por la Open Source Initiative (OSI). Consulta el archivo [LICENSE](LICENSE) para más información.
+Este proyecto está bajo la Licencia **MIT**. Consulta el archivo [LICENSE](LICENSE) para más información.
