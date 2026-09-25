@@ -589,7 +589,7 @@ export const Monitor: React.FC = () => {
       {/* Toast Flotante con Glassmorphism y Microanimación */}
       {actionStatus && (
         <div className="fixed bottom-5 right-5 z-50 select-none animate-toast-in pointer-events-none">
-          <div className="px-4 py-2.5 bg-zinc-950/90 backdrop-blur-xl border border-zinc-700/80 rounded-xs shadow-2xl shadow-black/80 flex items-center gap-2.5 text-xs font-mono text-zinc-100">
+          <div className="px-4 py-2.5 bg-zinc-950/95 border border-zinc-700/80 rounded-xs shadow-2xl shadow-black/80 flex items-center gap-2.5 text-xs font-mono text-zinc-100">
             <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
             <span className="font-semibold tracking-wide">{actionStatus}</span>
           </div>

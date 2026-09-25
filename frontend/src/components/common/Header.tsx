@@ -78,7 +78,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="w-full bg-[#050508]/95 backdrop-blur-md border-b border-zinc-800/80 px-4 sm:px-8 py-3 sm:py-0 sm:h-14 flex flex-col sm:flex-row justify-between items-center gap-3 shrink-0 z-30 select-none">
+    <header className="w-full bg-[#050508]/90 border-b border-zinc-800/80 px-4 sm:px-8 py-3 sm:py-0 sm:h-14 flex flex-col sm:flex-row justify-between items-center gap-3 shrink-0 z-30 select-none">
       {/* 1. Marca limpia */}
       <div className="w-full sm:w-auto flex items-center justify-start gap-2.5">
         <RxLogo size={24} className="h-6 w-6 rounded-xs shrink-0 shadow-xs" />

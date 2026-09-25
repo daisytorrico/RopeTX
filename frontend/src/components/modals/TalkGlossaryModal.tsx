@@ -109,7 +109,7 @@ export const TalkGlossaryModal: React.FC<TalkGlossaryModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md font-sans animate-in fade-in duration-150 select-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 font-sans animate-in fade-in duration-150 select-none">
       <div className="w-full max-w-2xl max-h-[90vh] bg-[#09090d] border border-zinc-800/90 rounded-lg p-5 sm:p-6 space-y-4 shadow-2xl shadow-black/90 font-mono flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-zinc-800/80 pb-3.5 shrink-0">

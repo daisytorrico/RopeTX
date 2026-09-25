@@ -123,8 +123,7 @@ export const SubtitleDisplay: React.FC<SubtitleDisplayProps> = ({
 
   return (
     <main className="relative flex flex-col flex-1 items-center justify-center px-4 sm:px-8 py-6 w-full max-w-5xl mx-auto min-h-[80dvh] select-text">
-      {/* Botones de control discretos y flotantes (Sin ocupar espacio de cabecera) */}
-      <div className="absolute top-2 right-2 sm:right-4 z-20 flex items-center bg-zinc-900/60 hover:bg-zinc-900/90 border border-zinc-800/80 rounded-full px-2 py-1 shadow-sm backdrop-blur-md transition-all select-none gap-1">
+      <div className="absolute top-2 right-2 sm:right-4 z-20 flex items-center bg-zinc-900/80 hover:bg-zinc-900 border border-zinc-800/80 rounded-full px-2 py-1 shadow-sm transition-all select-none gap-1">
         <button
           type="button"
           onClick={decreaseFontSize}

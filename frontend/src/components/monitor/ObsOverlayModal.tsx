@@ -40,7 +40,7 @@ export const ObsOverlayModal: React.FC<ObsOverlayModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md font-sans animate-in fade-in duration-150 select-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 font-sans animate-in fade-in duration-150 select-none">
       <div
         role="dialog"
         aria-modal="true"

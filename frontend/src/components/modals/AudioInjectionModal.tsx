@@ -247,7 +247,7 @@ export const AudioInjectionModal: React.FC<AudioInjectionModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md font-sans animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 font-sans animate-in fade-in duration-150">
       <div className="w-full max-w-xl bg-[#09090d] border border-zinc-800/90 rounded-lg p-5 sm:p-6 space-y-5 shadow-2xl shadow-black/90">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-zinc-800/80 pb-3.5">

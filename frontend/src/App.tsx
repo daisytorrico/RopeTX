@@ -167,7 +167,7 @@ export const App: React.FC = () => {
         <button
           type="button"
           onClick={() => handleUiLanguageChange(uiLanguage === 'es' ? 'en' : 'es')}
-          className="h-7 sm:h-8 px-2.5 flex items-center gap-1.5 bg-zinc-950/80 hover:bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-zinc-800/80 hover:border-zinc-700 rounded-full backdrop-blur-md shadow-md transition-all cursor-pointer text-xs font-mono"
+          className="h-7 sm:h-8 px-2.5 flex items-center gap-1.5 bg-zinc-950/90 hover:bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-zinc-800/80 hover:border-zinc-700 rounded-full shadow-md transition-all cursor-pointer text-xs font-mono"
           title={uiLanguage === 'es' ? 'Switch interface to English' : 'Cambiar interfaz a Español'}
           aria-label={uiLanguage === 'es' ? 'Switch interface to English' : 'Cambiar interfaz a Español'}
         >
