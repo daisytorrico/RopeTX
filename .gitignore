@@ -88,3 +88,11 @@ pnpm-debug.log*
 *.swo
 .DS_Store
 Thumbs.db
+
+# ==============================================================================
+# Private Demo & Speech Scripts (Local only)
+# ==============================================================================
+*speech*
+*Speech*
+SPEECH*
+*.speech.md

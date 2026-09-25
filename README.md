@@ -91,16 +91,21 @@ npm run dev
 
 ---
 
-## Integración con OBS y vMix
+## Integración con OBS y vMix (Stage Projection & Broadcast)
 
-La integración gráfica se realiza mediante **fuente de navegador** transparente (Browser Source):
+La integración gráfica se realiza mediante **fuente de navegador** transparente (*Browser Source / Web Browser Input*):
 
-1. Abrí la consola en `/monitor` y seleccioná la pestaña **OBS y vMix**.
-2. Elegí la sala y el idioma objetivo de los subtítulos.
-3. Copiá el enlace de overlay generado (`http://localhost:5173/overlay?room=main-stage&lang=es`).
-4. En OBS o vMix, agregá una **Browser Source**, pegá la URL y usá resolución de `1920x1080`.
+### Flujo de Configuración en vMix (Paso a Paso):
+1. **Generar Enlace:** En la consola de operador (`/monitor`), abrí la pestaña **OBS y vMix**, seleccioná la sala y activá el modo deseado (**Bilingüe / Dual** u original). Hacé clic en **"Copiar Enlace de Overlay"** (`https://ropetx-9bcde.web.app/overlay?room=main-stage&lang=dual`).
+2. **Agregar Entrada en vMix:** En vMix, hacé clic en **Add Input** ➔ **Web Browser**.
+3. **Pegar URL y Resolución:** Pegá la URL del overlay y asegurate de fijar la resolución en **`1920x1080`**.
+4. **Envío a Programa:** Usá el botón **`Cut`** (o transición directa) para enviar la capa de subtítulos a la pantalla principal (**Program Output**).
+5. **Salida Limpia para Auditorio / Proyector:** Activá la función **`Fullscreen`** apuntando hacia tu segundo monitor o tarjeta de video externa para proyectar subtítulos limpios y transparentes en sala.
 
-La capa tiene fondo transparente y renderiza los subtítulos en tiempo real vía WebSocket.
+### Flujo en OBS Studio:
+1. Agregá una fuente de tipo **Navegador (Browser)** en tu escena.
+2. Pegá la URL del overlay, configurá ancho `1920` y alto `1080`.
+3. Activá *"Apagar cuando no sea visible"* para optimizar recursos de GPU.
 
 ---
 
