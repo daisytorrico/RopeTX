@@ -112,6 +112,22 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
               )}
             </button>
           </form>
+
+          {/* Test Key Quick-Fill Helper */}
+          <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between text-[11px] text-zinc-400">
+            <span>Test Access Key:</span>
+            <button
+              type="button"
+              onClick={() => {
+                setSecret('AdminSecret2026');
+                setErrorMsg(null);
+              }}
+              className="font-mono text-indigo-400 hover:text-indigo-300 hover:underline cursor-pointer bg-white/[0.04] px-2 py-0.5 rounded border border-white/[0.08]"
+              title="Click to fill test access key"
+            >
+              AdminSecret2026
+            </button>
+          </div>
         </div>
 
         {/* Footer Navigation */}

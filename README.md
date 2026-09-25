@@ -84,10 +84,21 @@ npm install
 npm run dev
 ```
 
-* **Frontend (Audiencia):** `http://localhost:5173`
-* **Consola de Operador & Ingesta:** `http://localhost:5173/monitor?token=AdminSecret2026`
-* **Overlay Transparente OBS / vMix:** `http://localhost:5173/overlay?room=main-stage`
-* **Backend API Docs:** `http://localhost:8000/docs`
+* **Frontend (Audiencia):** `https://ropetx-9bcde.web.app` (Local: `http://localhost:5173`)
+* **Consola de Operador & Ingesta:** `https://ropetx-9bcde.web.app/monitor` (Local: `http://localhost:5173/monitor`)
+* **Overlay Transparente OBS / vMix:** `https://ropetx-9bcde.web.app/overlay?room=main-stage`
+* **Backend API Docs:** `https://ropetx-backend-450227135111.us-central1.run.app/docs` (Local: `http://localhost:8000/docs`)
+
+---
+
+## 🔐 Acceso a la Consola de Operador y Monitoreo (`/monitor`)
+
+Para acceder al panel de administración, gestión de escenarios, glosarios y control de transmisión:
+
+- **Enlace directo:** `https://ropetx-9bcde.web.app/monitor` (o `http://localhost:5173/monitor`)
+- **Clave de Acceso (Access Key):** `AdminSecret2026`
+
+> **Instrucciones de Inicio de Sesión:** Al ingresar a la URL del monitor desde el navegador, se solicitará la clave de acceso de operador. Introducí `AdminSecret2026` para autenticarte y habilitar todos los permisos de administración (control de 30+ salas, simulación de audio en vivo, teleprompter de 4 modos, edición de glosario y exportación de archivos SRT).
 
 ---
 
