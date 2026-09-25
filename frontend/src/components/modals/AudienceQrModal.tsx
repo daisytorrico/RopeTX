@@ -19,8 +19,6 @@ export const AudienceQrModal: React.FC<AudienceQrModalProps> = ({
   // Generar URL para la audiencia: si estamos en localhost, usar la IP de red local
   // para que los celulares puedan acceder vía la misma red WiFi
   const rawOrigin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173';
-  const hostname = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
-  const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
 
   // Si estamos en localhost, intentar usar la IP de red local del .env o mantener el origin real
   const VITE_PUBLIC_URL = (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_PUBLIC_URL) || '';
