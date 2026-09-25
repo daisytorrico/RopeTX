@@ -1,0 +1,75 @@
+{
+  "language_names": {
+    "es": "español neutro latinoamericano",
+    "en": "inglés (English, estilo neutro internacional)",
+    "pt": "português (Português, variante brasileña neutra)"
+  },
+  "categories": {
+    "cloud_devops": [
+      "Kubernetes", "Docker", "Helm", "Ingress", "Pod", "Pods", "Service Mesh", "Istio",
+      "Terraform", "Ansible", "AWS", "Amazon Web Services", "Azure", "GCP", "Google Cloud",
+      "Cloudflare", "Lambda", "Serverless", "EC2", "S3", "IAM", "Prometheus", "Grafana",
+      "OpenTelemetry", "Datadog", "Jaeger", "ArgoCD", "GitOps", "CI/CD", "DevOps",
+      "DevSecOps", "SRE", "Site Reliability Engineering"
+    ],
+    "databases_streaming": [
+      "Postgres", "PostgreSQL", "MySQL", "Redis", "Kafka", "MongoDB", "DynamoDB",
+      "Cassandra", "Elasticsearch", "OpenSearch", "SQLite", "CockroachDB", "Neo4j",
+      "Supabase", "Firebase", "RabbitMQ", "Celery", "NATS"
+    ],
+    "languages_frameworks": [
+      "Python", "TypeScript", "JavaScript", "Golang", "Go", "Rust", "Java", "Kotlin",
+      "Swift", "C++", "C#", ".NET", "Node.js", "Next.js", "React", "Vue", "Angular",
+      "Svelte", "FastAPI", "Flask", "Django", "Spring Boot", "Express", "NestJS",
+      "GraphQL", "gRPC", "REST", "RESTful", "WebSocket", "WebSockets", "WebRTC", "SSE"
+    ],
+    "ai_machine_learning": [
+      "LLM", "LLMs", "RAG", "Gemini", "ChatGPT", "Claude", "OpenAI", "PyTorch",
+      "TensorFlow", "Hugging Face", "Transformers", "Vector DB", "Qdrant", "ChromaDB",
+      "Pinecone", "Milvus", "Embeddings", "Embedding", "Fine-tuning", "Prompt Engineering",
+      "Agentic", "Zero-shot", "Few-shot", "Airflow", "Spark", "dbt", "Pandas", "NumPy", "Scikit-learn"
+    ],
+    "architecture_networking": [
+      "Cloud Native", "Microservices", "Monolith", "Frontend", "Backend", "Fullstack",
+      "Reverse Proxy", "Nginx", "Caddy", "OAuth", "OAuth2", "JWT", "SSO", "Multi-tenant",
+      "Deadlock", "Race Condition", "Concurrency", "Garbage Collector", "Memory Leak",
+      "Benchmark", "Throughput", "Latency", "SLA", "SLO", "SLI", "MTTR", "Failover",
+      "High Availability", "Open Source", "Linux"
+    ],
+    "development_git_ops": [
+      "Pull Request", "Merge Request", "PR", "Commit", "Branch", "Rebase", "Cherry-pick",
+      "Code Review", "Staging", "Production", "Canary", "Blue-Green", "Healthcheck",
+      "Rollback", "Deploy", "Pipeline", "Middleware", "Payload", "Endpoint", "Token",
+      "Stack", "Thread", "Thread Pool", "Caching", "Cache", "Mock", "Boilerplate",
+      "Refactor", "Troubleshooting"
+    ]
+  },
+  "preferred_translations": {
+    "AI": "IA",
+    "Artificial Intelligence": "Inteligencia Artificial",
+    "microservices": "microservicios",
+    "pull request": "pull request",
+    "merge request": "merge request",
+    "deploy": "deploy",
+    "deployment": "despliegue",
+    "pipeline": "pipeline",
+    "health check": "health check",
+    "middleware": "middleware",
+    "endpoint": "endpoint",
+    "payload": "payload",
+    "framework": "framework",
+    "runtime": "runtime",
+    "open source": "open source",
+    "feature": "feature",
+    "bug": "bug",
+    "issue": "issue",
+    "commit": "commit",
+    "branch": "branch",
+    "load balancer": "balanceador de carga",
+    "thread pool": "thread pool",
+    "zero-shot": "zero-shot",
+    "few-shot": "few-shot",
+    "prompt": "prompt",
+    "standby": "standby"
+  }
+}

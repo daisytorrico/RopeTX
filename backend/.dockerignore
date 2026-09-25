@@ -1,0 +1,13 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+*.db
+*.sqlite
+*.sqlite3
+.env
+.venv
+venv
+exports/*.srt
+.git

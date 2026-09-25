@@ -1,0 +1,101 @@
+version: '3.8'
+
+services:
+  # ── 1. Event Bus / Message Broker ──
+  redis:
+    container_name: ropetx-redis
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
+  # ── 2. Gateway de Distribución y API REST/WS ──
+  ms-distribution-gateway:
+    container_name: ropetx-gateway
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --ws-ping-interval 20 --ws-ping-timeout 20
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GEMINI_API_KEYS=${GEMINI_API_KEYS}
+      - REDIS_URL=redis://redis:6379/0
+      - ADMIN_TOKEN=${ADMIN_TOKEN:-AdminSecret2026}
+    volumes:
+      - ./backend/exports:/app/exports
+      - ./backend/ropetx.db:/app/ropetx.db
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── 3. Microservicio ASR (Gemini Live API) — Descubrimiento dinámico de salas ──
+  ms-gemini-asr:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: python -m microservices.ms_gemini_asr
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GEMINI_API_KEYS=${GEMINI_API_KEYS}
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── 4. Microservicio de Traducción Simultánea — Descubrimiento dinámico de salas ──
+  ms-gemini-translation:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: python -m microservices.ms_gemini_translation
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GEMINI_API_KEYS=${GEMINI_API_KEYS}
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── 5. Microservicio de Telemetría y RustDesk — Descubrimiento dinámico de salas ──
+  ms-telemetry-monitor:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: python -m microservices.ms_telemetry_monitor
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── 6. Frontend (Audiencia Web + Overlay OBS/vMix) ──
+  frontend:
+    container_name: ropetx-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_BACKEND_URL=http://localhost:8000
+        - VITE_WS_BACKEND_URL=ws://localhost:8000
+        - VITE_ADMIN_TOKEN=${ADMIN_TOKEN:-AdminSecret2026}
+    ports:
+      - "5173:5173"
+    depends_on:
+      - ms-distribution-gateway
+    restart: unless-stopped
+
+volumes:
+  redis_data:

@@ -1,0 +1,89 @@
+# ==============================================================================
+# Environment Variables & Secrets (CRITICAL: Never commit to version control)
+# ==============================================================================
+.env
+.env.*
+*.env
+backend/.env
+frontend/.env
+!.env.example
+!backend/.env.example
+
+# ==============================================================================
+# Databases & Persistence (Local dev DBs & SQLite files)
+# ==============================================================================
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+backend/*.db
+backend/*.db-shm
+backend/*.db-wal
+backend/*.sqlite
+backend/*.sqlite3
+
+# ==============================================================================
+# Exports & SRT Subtitles
+# ==============================================================================
+*.srt
+exports/
+backend/exports/
+
+# ==============================================================================
+# Node / Frontend Build Artifacts
+# ==============================================================================
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+dist-ssr/
+*.local
+
+# ==============================================================================
+# Python / Backend Virtual Environments & Caches
+# ==============================================================================
+__pycache__/
+backend/__pycache__/
+backend/app/**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+backend/.venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+
+# ==============================================================================
+# Logs & Process Dumps
+# ==============================================================================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# ==============================================================================
+# IDE & System Files
+# ==============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
